@@ -1,0 +1,43 @@
+// 1.13.cpp : Defines the entry point for the console application.
+//
+
+#include "stdafx.h"
+
+int ChangeTime(TCHAR* str)
+{
+	HANDLE file;
+	file=CreateFile(str, GENERIC_WRITE, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	if(file==INVALID_HANDLE_VALUE)
+	{
+		_tprintf(_T("Error code1: %u"),GetLastError());
+		return GetLastError();
+	}
+	else
+	{
+		SYSTEMTIME cur_time;
+		GetSystemTime(&cur_time);
+		FILETIME f_time;
+
+		if(!SystemTimeToFileTime(&cur_time, &f_time))
+		{
+			_tprintf(_T("error code2: %u"), GetLastError());
+			return GetLastError();
+		}
+		else
+		{
+		if(!SetFileTime(file,&f_time, NULL,NULL))
+		{
+			_tprintf(_T("error code3: %u"), GetLastError());
+			return GetLastError();
+		}
+		}}
+		CloseHandle(file);
+	return 0;
+}
+int _tmain(int argc, _TCHAR* argv[])
+{
+	ChangeTime(_T("D://mar.txt"));
+	
+	return 0;
+}
+
